@@ -1,4 +1,4 @@
-package com.example.fcboard.application.dto.req
+package com.example.fcboard.domain.post.dto.req
 
 import org.springframework.web.bind.annotation.RequestParam
 

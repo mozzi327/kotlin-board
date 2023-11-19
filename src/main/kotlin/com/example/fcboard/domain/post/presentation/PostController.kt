@@ -1,31 +1,35 @@
-package com.example.fcboard.domain.presentation
+package com.example.fcboard.domain.post.presentation
 
-import com.example.fcboard.application.dto.req.PostCreateRequest
-import com.example.fcboard.application.dto.req.PostSearchRequest
-import com.example.fcboard.application.dto.req.PostUpdateRequest
-import com.example.fcboard.application.dto.res.PostDetailResponse
-import com.example.fcboard.application.dto.res.PostSummaryResponse
+import com.example.fcboard.domain.post.application.PostService
+import com.example.fcboard.domain.post.dto.req.PostCreateRequest
+import com.example.fcboard.domain.post.dto.req.PostSearchRequest
+import com.example.fcboard.domain.post.dto.req.PostUpdateRequest
+import com.example.fcboard.domain.post.dto.req.toEntity
+import com.example.fcboard.domain.post.dto.res.PostDetailResponse
+import com.example.fcboard.domain.post.dto.res.PostSummaryResponse
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
 
 @RestController
-class PostCtl {
+class PostController(
+    private val postService: PostService,
+) {
 
     @PostMapping("/posts")
     fun createPost(
-        @RequestBody postCreateRequest: PostCreateRequest,
+        @RequestBody req: PostCreateRequest,
     ): Long {
-        return 1L
+        return postService.createPost(req.toEntity())
     }
 
     @PutMapping("/posts/{id}")
     fun updatePost(
         @PathVariable id: Long,
-        @RequestBody postUpdateRequest: PostUpdateRequest,
+        @RequestBody req: PostUpdateRequest,
     ): Long {
-        return id
+        return postService.updatePost(id, req)
     }
 
     @DeleteMapping("/posts/{id}")
@@ -33,8 +37,7 @@ class PostCtl {
         @PathVariable id: Long,
         @RequestParam createdBy: String,
     ): Long {
-        println(createdBy)
-        return id
+        return postService.deletePost(id, createdBy)
     }
 
     @GetMapping("/posts/{id}")
@@ -53,10 +56,8 @@ class PostCtl {
     @GetMapping("/posts")
     fun getPosts(
         pageable: Pageable,
-        postSearchRequest: PostSearchRequest,
+        req: PostSearchRequest,
     ): Page<PostSummaryResponse> {
-        println("title: ${postSearchRequest.title}")
-        println("title: ${postSearchRequest.createdBy}")
         return Page.empty()
     }
 }

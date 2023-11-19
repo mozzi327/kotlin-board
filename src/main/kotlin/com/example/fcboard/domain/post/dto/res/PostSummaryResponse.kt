@@ -1,4 +1,4 @@
-package com.example.fcboard.application.dto.res
+package com.example.fcboard.domain.post.dto.res
 
 data class PostSummaryResponse(
     val id: Long,
