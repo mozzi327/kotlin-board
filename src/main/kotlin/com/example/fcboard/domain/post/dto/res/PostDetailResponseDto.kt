@@ -1,6 +1,8 @@
 package com.example.fcboard.domain.post.dto.res
 
-data class PostDetailResponse(
+import com.example.fcboard.domain.post.domain.Post
+
+data class PostDetailResponseDto(
     val id: Long,
     val title: String,
     val content: String,
@@ -8,11 +10,10 @@ data class PostDetailResponse(
     val createdAt: String,
 )
 
-fun PostDetailResponseDto.toResponse() = PostDetailResponse(
+fun Post.toDetailResponseDto() = PostDetailResponseDto(
     id = id,
     title = title,
     content = content,
     createdBy = createdBy,
-    createdAt = createdAt
-
+    createdAt = createdAt.toString()
 )

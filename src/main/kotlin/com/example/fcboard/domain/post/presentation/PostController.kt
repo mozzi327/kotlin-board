@@ -1,16 +1,13 @@
 package com.example.fcboard.domain.post.presentation
 
 import com.example.fcboard.domain.post.application.PostService
-import com.example.fcboard.domain.post.dto.req.PostCreateRequest
-import com.example.fcboard.domain.post.dto.req.PostSearchRequest
-import com.example.fcboard.domain.post.dto.req.PostUpdateRequest
-import com.example.fcboard.domain.post.dto.req.toEntity
+import com.example.fcboard.domain.post.dto.req.*
 import com.example.fcboard.domain.post.dto.res.PostDetailResponse
 import com.example.fcboard.domain.post.dto.res.PostSummaryResponse
+import com.example.fcboard.domain.post.dto.res.toResponse
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.web.bind.annotation.*
-import java.time.LocalDateTime
 
 @RestController
 class PostController(
@@ -44,13 +41,7 @@ class PostController(
     fun getPost(
         @PathVariable id: Long,
     ): PostDetailResponse {
-        return PostDetailResponse(
-            1L,
-            "title",
-            "content",
-            "createdBy",
-            LocalDateTime.now().toString()
-        )
+        return postService.getPost(id).toResponse()
     }
 
     @GetMapping("/posts")
@@ -58,6 +49,6 @@ class PostController(
         pageable: Pageable,
         req: PostSearchRequest,
     ): Page<PostSummaryResponse> {
-        return Page.empty()
+        return postService.findPageBy(pageable, req.toDto()).toResponse()
     }
 }

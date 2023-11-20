@@ -2,9 +2,12 @@ package com.example.fcboard.domain.post.application
 
 import com.example.fcboard.domain.post.domain.Post
 import com.example.fcboard.domain.post.dto.req.PostUpdateRequest
+import com.example.fcboard.domain.post.dto.res.*
 import com.example.fcboard.domain.post.exception.PostNotDeletableException
 import com.example.fcboard.domain.post.exception.PostNotFoundException
 import com.example.fcboard.domain.post.infra.PostRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -14,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional
 class PostService(
     private val postRepository: PostRepository,
 ) {
-    fun getPost(id: Long) {}
 
     @Transactional
     fun createPost(post: Post): Long {
@@ -34,5 +36,13 @@ class PostService(
         if (post.createdBy != deletedBy) throw PostNotDeletableException()
         postRepository.delete(post)
         return id
+    }
+
+    fun getPost(id: Long): PostDetailResponseDto {
+        return postRepository.findByIdOrNull(id)?.toDetailResponseDto() ?: throw PostNotFoundException()
+    }
+
+    fun findPageBy(pageRequest: Pageable, postSearchRequestDto: PostSearchRequestDto): Page<PostSummaryResponseDto> {
+        return postRepository.findPageBy(pageRequest, postSearchRequestDto).toSummaryResponseDto()
     }
 }
